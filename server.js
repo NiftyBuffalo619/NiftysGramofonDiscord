@@ -2,9 +2,13 @@ const { Client, Events, Collection , GatewayIntentBits, IntentsBitField , REST ,
 const dotenv = require('dotenv').config();
 const token = process.env.token;
 const fs = require('node:fs');
+const { createReadStream } = require('node:fs');
 const path = require('path');
+const { join } = require('node:path');
 const { createSpinner } = require('nanospinner');
 var colors = require('colors');
+const { joinVoiceChannel, getVoiceConnections , createAudioPlayer, NoSubscriberBehavior, createAudioResource , AudioPlayerStatus , StreamType} = require('@discordjs/voice');
+const { time } = require('node:console');
 
 //const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const client = new Client({ intents: [
@@ -12,6 +16,8 @@ const client = new Client({ intents: [
 	IntentsBitField.Flags.GuildMembers,
 	IntentsBitField.Flags.GuildMessages,
 	IntentsBitField.Flags.MessageContent,
+	IntentsBitField.Flags.GuildVoiceStates,
+	IntentsBitField.Flags.GuildEmojisAndStickers,
 ] });
 
 client.commands = new Collection();
@@ -34,14 +40,14 @@ for (const folder of commandFolders) {
 			commands.push(command.data.toJSON());
 		}
 		else {
-			console.log(`[Warning]`.yellow);
+			console.log(`[Warning] Missing data properties for ${command?.name}`.yellow);
 		}
 	}
 }
 spinner.success(`Commands have loaded sucessfully!`.green);
 
 client.once(Events.ClientReady, c => {
-	console.log(`Ready! Logged in as ${c.user.tag}`);
+	console.log(`Ready!Logged in as ${c.user.tag}`.green);
 });
 
 
@@ -75,6 +81,53 @@ client.on(Events.InteractionCreate, async interaction => {
 			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
 		} else {
 			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		}
+	}
+
+	if (interaction.isChatInputCommand()) {
+		if (interaction.commandName === 'play') {
+			const voicechannel = interaction.options.getChannel('channel');
+			const connection = joinVoiceChannel({
+				channelId: voicechannel.id,
+				guildId: interaction.guildId,
+				adapterCreator: interaction.guild.voiceAdapterCreator,
+			});
+			//console.log(`Joined channel ${voicechannel.id} guild id: ${interaction.guildId}`.cyan);
+			const time = new Date();
+			let hours = time.getHours();
+			let minutes = time.getMinutes();
+			let seconds = time.getSeconds();
+			console.log(`[Server][${hours}:${minutes}:${seconds}] Joined channel`.cyan + ` ${voicechannel.name}`.white);
+			console.log(`[Server][${hours}:${minutes}:${seconds}] preparing to play voice...`.cyan);
+			const player = createAudioPlayer({
+				behaviors: {
+					noSubscriber: NoSubscriberBehavior.Play,
+				}
+			});
+
+			player.on(AudioPlayerStatus.Playing, () => {
+				console.log('The audio player has started playing!');
+			});
+
+			player.on('error', (err) => {
+				console.log(`${err}`);
+			});
+			
+			let resource = createAudioResource(join(__dirname, 'music/nokiaarabic.mp3'));
+			resource = createAudioResource(join(__dirname, 'music/nokiaarabic.mp3'), { inlineVolume: true });
+			resource.volume.setVolume(0.5);
+
+	
+			resource = createAudioResource(createReadStream(join(__dirname, 'music/nokiaarabic.ogg'), {
+				inputType: StreamType.OggOpus,
+			}));
+
+			player.play(resource);
+
+			
+			const subscription = connection.subscribe(player);
+			
+		    //https://discordjs.guide/voice/audio-player.html#creation
 		}
 	}
 });
