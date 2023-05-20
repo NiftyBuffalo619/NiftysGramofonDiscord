@@ -85,7 +85,7 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
 	if (interaction.isChatInputCommand()) {
-		if (interaction.commandName === 'play') {
+		if (interaction.commandName === 'playnokiaarabic') {
 			const voicechannel = interaction.options.getChannel('channel');
 			const connection = joinVoiceChannel({
 				channelId: voicechannel.id,
@@ -98,7 +98,7 @@ client.on(Events.InteractionCreate, async interaction => {
 			let minutes = time.getMinutes();
 			let seconds = time.getSeconds();
 			console.log(`[Server][${hours}:${minutes}:${seconds}] Joined channel`.cyan + ` ${voicechannel.name}`.white);
-			console.log(`[Server][${hours}:${minutes}:${seconds}] preparing to play voice...`.cyan);
+			console.log(`[Server][${hours}:${minutes}:${seconds}] Preparing to play voice...`.cyan);
 			const player = createAudioPlayer({
 				behaviors: {
 					noSubscriber: NoSubscriberBehavior.Play,
@@ -106,19 +106,32 @@ client.on(Events.InteractionCreate, async interaction => {
 			});
 
 			player.on(AudioPlayerStatus.Playing, () => {
-				console.log('The audio player has started playing!');
+				console.log(`[Server][${hours}:${minutes}:${seconds}] The audio player has started playing!`.cyan);
 			});
 
 			player.on('error', (err) => {
-				console.log(`${err}`);
+				console.log(`[Server][${hours}:${minutes}:${seconds}] An error occured: ${err}`.red);
 			});
 			
-			let resource = createAudioResource(join(__dirname, 'music/nokiaarabic.mp3'));
-			resource = createAudioResource(join(__dirname, 'music/nokiaarabic.mp3'), { inlineVolume: true });
-			resource.volume.setVolume(0.5);
+			//let resource = createAudioResource(join(__dirname, 'music/nokiaarabic.mp3'));
+			var soundname = "";
+			switch (interaction.options.get('category').value) {
+				case 1, '1':
+					soundname = "music/nokiaarabic.ogg";
+				break;
+				case 2, '2':
+					soundname = "music/nokiaarabic2.ogg";
+				break;
+				default:
+					soundname = "music/nokiaarabic.ogg";
+				break;
+			}
+			resource = createAudioResource(join(__dirname, soundname));
+			resource = createAudioResource(join(__dirname, soundname), { inlineVolume: true });
+			resource.volume.setVolume(1);
 
 	
-			resource = createAudioResource(createReadStream(join(__dirname, 'music/nokiaarabic.ogg'), {
+			resource = createAudioResource(createReadStream(join(__dirname, soundname), {
 				inputType: StreamType.OggOpus,
 			}));
 
