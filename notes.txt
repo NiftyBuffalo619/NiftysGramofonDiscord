@@ -1,1 +1,3 @@
 https://github.com/SteamCodeYT/Discord.js-Bot/blob/main/commands/play.js
+'https://streams.ilovemusic.de/iloveradio8.mp3'
+https://icecast5.play.cz/impuls128.mp3?1571059741
