@@ -1,4 +1,4 @@
-const { Client, Events, Collection , GatewayIntentBits, IntentsBitField , REST , Routes } = require('discord.js');
+const { Client, Events, Collection , GatewayIntentBits, IntentsBitField , REST , Routes , ActivityType} = require('discord.js');
 const dotenv = require('dotenv').config();
 const token = process.env.token;
 const fs = require('node:fs');
@@ -9,6 +9,7 @@ const { createSpinner } = require('nanospinner');
 var colors = require('colors');
 const { joinVoiceChannel, getVoiceConnections , createAudioPlayer, NoSubscriberBehavior, createAudioResource , AudioPlayerStatus , StreamType} = require('@discordjs/voice');
 const { time } = require('node:console');
+const RPC = require('')
 
 //const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const client = new Client({ intents: [
@@ -46,8 +47,27 @@ for (const folder of commandFolders) {
 }
 spinner.success(`Commands have loaded sucessfully!`.green);
 
+let status = [
+	{
+		name: `Nifty's Discord`,
+		type: ActivityType.Watching,
+	},
+	{
+		name: `to Music`,
+		type: ActivityType.Listening,
+	}
+]
 client.once(Events.ClientReady, c => {
 	console.log(`Ready!Logged in as ${c.user.tag}`.green);
+	client.user.setActivity({
+		name: `Nifty's Discord`,
+		type: ActivityType.Watching,
+	});
+
+	setInterval(() => {
+		let random = Math.floor(Math.random() * status.length);
+		client.user.setActivity(status[random]);
+	}, 10000);
 });
 
 
