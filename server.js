@@ -9,7 +9,7 @@ const { createSpinner } = require('nanospinner');
 var colors = require('colors');
 const { joinVoiceChannel, getVoiceConnections , createAudioPlayer, NoSubscriberBehavior, createAudioResource , AudioPlayerStatus , StreamType} = require('@discordjs/voice');
 const { time } = require('node:console');
-const RPC = require('')
+
 
 //const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const client = new Client({ intents: [
@@ -167,3 +167,4 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
 client.login(token);
+//module.exports = client;
