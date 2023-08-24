@@ -2,6 +2,18 @@ const express = require("express");
 const path = require("path");
 const colors = require('colors');
 const basicAuth = require('basic-auth');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = process.env.db_uri;
+
+const client = new MongoClient(uri , {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 class Server {
   constructor() {
@@ -11,15 +23,48 @@ class Server {
       //homepage: "/homepage",
     };
 
-    this.app.use((req , res , next) => {
+    this.app.use(async(req , res , next) => {
       const credentials = basicAuth(req);
 
-      if (!credentials || credentials.name !== "username" || credentials.pass !== "password") {
+      if (!credentials) {
           res.status(401).send("Failed to authenticate");
           return;
       }
 
-      next();
+      try {
+        await client.connect();
+        const db = client.db("NiftyhoGramofon");
+        const userCollection = db.collection("users");
+        const query = { username: credentials.name , password: credentials.pass }
+        console.log(query);
+        //const user = await client.db("NiftyhoGramofon").collection("users").findOne({ username: "", password: "" });
+        const user = db.collection('users')
+        .find(
+        {
+          username: credentials.name,
+        },
+        {}).sort({});
+        const password = db.collection('users').find(
+          {
+            password: credentials.pass,
+          }
+        ).sort({});
+
+        if (user && password) {
+          next();
+        }
+        else {
+          console.log(`User ${credentials.name} not found`);
+          res.status(401).send("User or password not found.");
+        }
+        console.log("Connected to the database");
+      }
+      catch (err) {
+          console.log(err);
+      }
+      finally {
+        client.close();
+      }
     });
     this.app.get('/', function(req , res , next) {
       res.send("OK");
