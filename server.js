@@ -165,6 +165,8 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 });
 
-
+const Server = require('./server/server');
+const server = new Server();
+server.listen(80);
 client.login(token);
 //module.exports = client;
