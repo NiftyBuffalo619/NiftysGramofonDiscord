@@ -3,6 +3,8 @@ const { joinVoiceChannel, getVoiceConnections , createAudioPlayer, NoSubscriberB
 const { default: PlayDL } = require('play-dl');
 const { createReadStream } = require('node:fs');
 var colors = require('colors');
+const axios = require('axios');
+const base64 = require('base-64');
 
 const queue = new Map();
 
@@ -55,8 +57,34 @@ module.exports = {
         });
         connection.subscribe(player);
         var resource;
+        const soundObject = require('../../server/server');
+        const username = process.env.username;
+        const password = process.env.password;
+        const AuthHeader = 'Basic ' + base64.encode(`${username}:${password}`);
         switch (interaction.options.get('radio').value) {
             case "1":
+                 try {
+                    axios.post('localhost/api/addsong', {
+                        auth: {
+                            username: base64.encode(username),
+                            password: base64.encode(password),
+                        },
+                        params: {
+                            iconUrl: "https://api.play.cz/static/radio_logo/t200/impuls.png",
+                            name: "Radio Impuls",
+                            artist: "",
+                            description: ""
+                        },
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                    }).then(response => {
+                        console.log(`[Server][${hours}:${minutes}:${seconds}]: Successfully added song into the server`);
+                    });
+                 }
+                 catch (err) {
+                    console.log(`Error while sending data to the server ${err}`);
+                 }
                  resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
             break;
             case "2":

@@ -4,6 +4,7 @@ const colors = require('colors');
 const basicAuth = require('basic-auth');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = process.env.db_uri;
+const bcrypt = require('bcrypt');
 
 const client = new MongoClient(uri , {
   serverApi: {
@@ -19,9 +20,17 @@ class Server {
   constructor() {
     this.app = express();
     this.port = process.env.port || 80;
+    this.song = new SongObject();
     this.paths = {
       //homepage: "/homepage",
     };
+
+    const comparePassword = (psw1 , psw2) => {
+      if (psw1 === psw2)
+        return true;
+      else 
+        return false;
+    } 
 
     this.app.use(async(req , res , next) => {
       const credentials = basicAuth(req);
@@ -50,7 +59,15 @@ class Server {
           }
         ).sort({});
 
-        if (user && password) {
+        if (user) {
+          //const passwordMatch = await bcrypt.compare(credentials.pass , user.password);
+          console.log(`${credentials.pass} ${user.password}`);
+          /*if (comparePassword(credentials.pass , user.password)) {
+             next();
+          }
+          else {
+            res.status(401).send("User or password not found.");
+          }*/
           next();
         }
         else {
@@ -70,27 +87,32 @@ class Server {
       res.send("OK");
     });
     this.app.get('/api', (req , res) => {
+        res.send("API");
+    });
+    this.app.get('/api/song', (req , res) => {
+        res.json({ iconUrl: this.song.iconUrl, name: this.song.name , artist: this.song.artist , description: this.song.description });
+    });
+    this.app.post('/api/addsong', (req , res) => {
+        console.log(`${req.query.name} ${req.query.iconUrl} ${req.query.artist} ${req.query.description} `);
+        if (req.query.name === undefined || req.query.iconUrl === undefined || req.query.artist === undefined || req.query.description === undefined) {
+          res.status(400).send("Bad Request Please provide all variables");
+          return;
+        }
+        const name = req.query.name;
+        const iconUrl = req.query.iconUrl;
+        const artist = req.query.artist;
+        const description = req.query.description;
 
+        this.song = new SongObject(iconUrl , name , artist , description);
+        res.status(200).send("200 OK");
     });
     //PUBLIC PATH 
     this.app.use(express.static(path.join(__dirname , '../server/public/')));
 
     // NOT FOUND PATH
     this.app.use((req , res , next) => {
-      res.status(404);
-
-      if (req.accepts('html')) {
-        res.sendFile(path.join(__dirname, 'public/404notfound.html'));
-        return;
-      }
-
-      if (req.accepts('json')) {
-        res.json({ error: 'Not found' });
-        return;
-      }
-
-      res.type('txt').send('Not found');
-      });
+      res.status(404).send("404 Not Found");
+    });
 
     // ERROR HANDLING 
     this.app.use((err , req , res , next) => {
@@ -115,6 +137,14 @@ class Server {
     this.app.listen(this.port, () => {
       console.log(colors.green("Server sucessfully started running on port: "), this.port);
     });
+  }
+}
+class SongObject {
+  constructor(iconUrl , name , artist , description) {
+      this.iconUrl = iconUrl;
+      this.name = name;
+      this.artist = artist;
+      this.description = description;
   }
 }
 
