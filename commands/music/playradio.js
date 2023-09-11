@@ -5,6 +5,8 @@ const { createReadStream } = require('node:fs');
 var colors = require('colors');
 const axios = require('axios');
 const base64 = require('base-64');
+const path = require('path');
+const dotenv = require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 const queue = new Map();
 
@@ -58,16 +60,17 @@ module.exports = {
         connection.subscribe(player);
         var resource;
         const soundObject = require('../../server/server');
-        const username = process.env.username;
-        const password = process.env.password;
+        const username = process.env.usernameDB;
+        const password = process.env.passwordDB;
         const AuthHeader = 'Basic ' + base64.encode(`${username}:${password}`);
+        console.log(`${username}:${password}`);
         switch (interaction.options.get('radio').value) {
             case "1":
-                 try {
+                new Promise((resolve, reject) => {
                     axios.post('localhost/api/addsong', {
                         auth: {
-                            username: base64.encode(username),
-                            password: base64.encode(password),
+                            username:  base64.encode(username),
+                            password:  base64.encode(password),
                         },
                         params: {
                             iconUrl: "https://api.play.cz/static/radio_logo/t200/impuls.png",
@@ -78,13 +81,12 @@ module.exports = {
                         headers: {
                             'Content-Type': 'application/json'
                         },
+                    }).catch(error => {
+                        resolve([]);
                     }).then(response => {
                         console.log(`[Server][${hours}:${minutes}:${seconds}]: Successfully added song into the server`);
                     });
-                 }
-                 catch (err) {
-                    console.log(`Error while sending data to the server ${err}`);
-                 }
+                });
                  resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
             break;
             case "2":

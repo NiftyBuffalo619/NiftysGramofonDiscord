@@ -2,18 +2,15 @@ const express = require("express");
 const path = require("path");
 const colors = require('colors');
 const basicAuth = require('basic-auth');
-const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = process.env.db_uri;
 const bcrypt = require('bcrypt');
+const mysql = require('mysql2');
 
-const client = new MongoClient(uri , {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-  useNewUrlParser: true,
-  useUnifiedTopology: true
+const connection = mysql.createConnection({
+  host: process.env.host,
+  user: "gramofon",
+  password: process.env.password,
+  database: process.env.database
 });
 
 class Server {
@@ -24,63 +21,43 @@ class Server {
     this.paths = {
       //homepage: "/homepage",
     };
-
-    const comparePassword = (psw1 , psw2) => {
-      if (psw1 === psw2)
-        return true;
-      else 
-        return false;
-    } 
-
     this.app.use(async(req , res , next) => {
       const credentials = basicAuth(req);
 
       if (!credentials) {
-          res.status(401).send("Failed to authenticate");
+          res.status(401).send("No credentials specified Please make sure to specify them");
           return;
       }
 
       try {
-        await client.connect();
-        const db = client.db("NiftyhoGramofon");
-        const userCollection = db.collection("users");
-        const query = { username: credentials.name , password: credentials.pass }
-        console.log(query);
-        //const user = await client.db("NiftyhoGramofon").collection("users").findOne({ username: "", password: "" });
-        const user = db.collection('users')
-        .find(
-        {
-          username: credentials.name,
-        },
-        {}).sort({});
-        const password = db.collection('users').find(
-          {
-            password: credentials.pass,
-          }
-        ).sort({});
+        connection.connect((err) => {
+            if (err) {
+              console.log("Error while connecting to the database " + e.stack);
+              return;
+            }
+            console.log("Successfully connected to the database");
 
-        if (user) {
-          //const passwordMatch = await bcrypt.compare(credentials.pass , user.password);
-          console.log(`${credentials.pass} ${user.password}`);
-          /*if (comparePassword(credentials.pass , user.password)) {
-             next();
-          }
-          else {
-            res.status(401).send("User or password not found.");
-          }*/
-          next();
-        }
-        else {
-          console.log(`User ${credentials.name} not found`);
-          res.status(401).send("User or password not found.");
-        }
-        console.log("Connected to the database");
+            const sql = 'SELECT * FROM ?? WHERE username = ? AND password = ?';
+            const values = [tableName , credentials.name , credentials.pass];
+
+            connection.query(sql , values, (err, results , fields) => {
+                if (err) {
+                  console.log("Error executing query: " + err.stack);
+                  return;
+                }
+              
+                if (results.length > 0) {
+                  console.log("User found", result[0]);
+                  next();
+                }
+                else {
+                  console.log("User not found");
+                }
+            });
+        });
       }
       catch (err) {
           console.log(err);
-      }
-      finally {
-        client.close();
       }
     });
     this.app.get('/', function(req , res , next) {
