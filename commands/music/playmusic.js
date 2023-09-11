@@ -5,6 +5,7 @@ const { createReadStream } = require('node:fs');
 const { join } = require('node:path');
 var colors = require('colors');
 const APP_PATH = require('../../static');
+const axios = require('axios');
 
 const queue = new Map();
 
@@ -56,7 +57,29 @@ module.exports = {
         var resource;
         switch (interaction.options.get('music').value) {
             case "1":
+                const postData = {
+                    name: "Le gendarme de Saint Tropez",
+                    iconUrl: "Icon Url",
+                    artist: "Artist",
+                    description: "Description",
+                }
+                const params = {
+                    params: postData, // Pass the data as query parameters
+                };
+                const Auth = {
+                    auth: {
+                        username: process.env.usernameDB,
+                        password: process.env.passwordDB,
+                      },
+                }
+                
                  resource = createAudioResource(join(APP_PATH , "music/le_gendarme_de_saint_tropez.mp3"));
+                 new Promise((resolve, reject) => {
+                    axios.post(`localhost/api/addsong`, params, Auth)
+                    .catch(error => {
+                        resolve();
+                     });
+                 });
             break;
             default:
                 resource = createAudioResource(join(APP_PATH, "../music/le_gendarme_de_saint_tropez.mp3"));

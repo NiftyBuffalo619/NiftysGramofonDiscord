@@ -47,7 +47,7 @@ class Server {
                 }
               
                 if (results.length > 0) {
-                  console.log("User found", results[0]);
+                  console.log("User found");
                   next();
                 }
                 else {
