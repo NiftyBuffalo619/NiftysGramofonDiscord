@@ -71,7 +71,6 @@ class Server {
         res.json({ iconUrl: this.song.iconUrl, name: this.song.name , artist: this.song.artist , description: this.song.description });
     });
     this.app.post('/api/addsong', (req , res) => {
-        console.log(`${req.query.name} ${req.query.iconUrl} ${req.query.artist} ${req.query.description} `);
         if (req.query.name === undefined || req.query.iconUrl === undefined || req.query.artist === undefined || req.query.description === undefined) {
           res.status(400).send("Bad Request Please provide all variables");
           return;

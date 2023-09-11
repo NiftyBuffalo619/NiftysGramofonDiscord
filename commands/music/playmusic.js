@@ -62,21 +62,24 @@ module.exports = {
                     iconUrl: "Icon Url",
                     artist: "Artist",
                     description: "Description",
-                }
-                const params = {
-                    params: postData, // Pass the data as query parameters
-                };
-                const Auth = {
-                    auth: {
-                        username: process.env.usernameDB,
-                        password: process.env.passwordDB,
-                      },
-                }
-                
+                }  
                  resource = createAudioResource(join(APP_PATH , "music/le_gendarme_de_saint_tropez.mp3"));
                  new Promise((resolve, reject) => {
-                    axios.post(`localhost/api/addsong`, params, Auth)
+                    axios.post(`http://localhost/api/addsong`, null,
+                    {
+                        auth: {
+                            username: process.env.usernameDB,
+                            password: process.env.passwordDB,
+                        },
+                        params: {
+                            name: "Le gendarme de Saint Tropez",
+                            iconUrl: "Icon Url",
+                            artist: "Artist",
+                            description: "Description",
+                        }
+                    })
                     .catch(error => {
+                        console.log(`Error ${error.stack}`);
                         resolve();
                      });
                  });
