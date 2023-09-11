@@ -58,7 +58,8 @@ let status = [
 	}
 ]
 client.once(Events.ClientReady, c => {
-	console.log(`Ready!Logged in as ${c.user.tag}`.green);
+	console.log(`Successfully started`.green + `✔`);
+	console.log(`Logged in as ${c.user.tag}`.green);
 	client.user.setActivity({
 		name: `Nifty's Discord`,
 		type: ActivityType.Watching,

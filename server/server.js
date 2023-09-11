@@ -113,7 +113,7 @@ class Server {
 
   listen() {
     this.app.listen(this.port, () => {
-      console.log(colors.green("Server sucessfully started running on port: "), this.port);
+      console.log(colors.green("API Server sucessfully started running on port: "), this.port);
     });
   }
 }
