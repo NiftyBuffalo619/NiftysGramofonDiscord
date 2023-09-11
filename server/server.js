@@ -38,7 +38,7 @@ class Server {
             console.log("Successfully connected to the database");
 
             const sql = 'SELECT * FROM ?? WHERE username = ? AND password = ?';
-            const values = [tableName , credentials.name , credentials.pass];
+            const values = ["Users" , credentials.name , credentials.pass];
 
             connection.query(sql , values, (err, results , fields) => {
                 if (err) {
@@ -47,11 +47,12 @@ class Server {
                 }
               
                 if (results.length > 0) {
-                  console.log("User found", result[0]);
+                  console.log("User found", results[0]);
                   next();
                 }
                 else {
                   console.log("User not found");
+                  res.status(401).send("Bad credentials");
                 }
             });
         });
