@@ -7,6 +7,7 @@ const axios = require('axios');
 const base64 = require('base-64');
 const path = require('path');
 const dotenv = require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+const axios = require('axios');
 
 const queue = new Map();
 
@@ -67,38 +68,112 @@ module.exports = {
         switch (interaction.options.get('radio').value) {
             case "1":
                 new Promise((resolve, reject) => {
-                    axios.post('localhost/api/addsong', {
+                    axios.post(`http://localhost/api/addsong`, null,
+                    {
                         auth: {
-                            username:  base64.encode(username),
-                            password:  base64.encode(password),
+                            username: process.env.usernameDB,
+                            password: process.env.passwordDB,
                         },
                         params: {
-                            iconUrl: "https://api.play.cz/static/radio_logo/t200/impuls.png",
                             name: "Radio Impuls",
+                            iconUrl: "https://api.play.cz/static/radio_logo/t200/impuls.png",
                             artist: "",
-                            description: ""
-                        },
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                    }).catch(error => {
-                        resolve([]);
-                    }).then(response => {
-                        console.log(`[Server][${hours}:${minutes}:${seconds}]: Successfully added song into the server`);
-                    });
-                });
+                            description: "",
+                        }
+                    })
+                    .catch(error => {
+                        console.log(`Error ${error.stack}`);
+                        resolve();
+                     });
+                 });
                  resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
             break;
             case "2":
+                new Promise((resolve, reject) => {
+                    axios.post(`http://localhost/api/addsong`, null,
+                    {
+                        auth: {
+                            username: process.env.usernameDB,
+                            password: process.env.passwordDB,
+                        },
+                        params: {
+                            name: "Radio Blanik",
+                            iconUrl: "",
+                            artist: "",
+                            description: "",
+                        }
+                    })
+                    .catch(error => {
+                        console.log(`Error ${error.stack}`);
+                        resolve();
+                     });
+                 });
                 resource = createAudioResource('http://ice.abradio.cz/blanikfm128.mp3');
             break;
             case "3":
+                new Promise((resolve, reject) => {
+                    axios.post(`http://localhost/api/addsong`, null,
+                    {
+                        auth: {
+                            username: process.env.usernameDB,
+                            password: process.env.passwordDB,
+                        },
+                        params: {
+                            name: "Evropa 2",
+                            iconUrl: "",
+                            artist: "",
+                            description: "",
+                        }
+                    })
+                    .catch(error => {
+                        console.log(`Error ${error.stack}`);
+                        resolve();
+                     });
+                 });
                 resource = createAudioResource('https://ice.actve.net/fm-evropa2-128');
             break;
             case "4":
+                new Promise((resolve, reject) => {
+                    axios.post(`http://localhost/api/addsong`, null,
+                    {
+                        auth: {
+                            username: process.env.usernameDB,
+                            password: process.env.passwordDB,
+                        },
+                        params: {
+                            name: "OE 3",
+                            iconUrl: "",
+                            artist: "",
+                            description: "",
+                        }
+                    })
+                    .catch(error => {
+                        console.log(`Error ${error.stack}`);
+                        resolve();
+                     });
+                 });
                 resource = createAudioResource('http://orf-live.ors-shoutcast.at/oe3-q2a');
             break;
             default:
+                new Promise((resolve, reject) => {
+                    axios.post(`http://localhost/api/addsong`, null,
+                    {
+                        auth: {
+                            username: process.env.usernameDB,
+                            password: process.env.passwordDB,
+                        },
+                        params: {
+                            name: "Radio",
+                            iconUrl: "",
+                            artist: "",
+                            description: "",
+                        }
+                    })
+                    .catch(error => {
+                        console.log(`Error ${error.stack}`);
+                        resolve();
+                     });
+                 });
                 resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
             break;
         }

@@ -57,12 +57,6 @@ module.exports = {
         var resource;
         switch (interaction.options.get('music').value) {
             case "1":
-                const postData = {
-                    name: "Le gendarme de Saint Tropez",
-                    iconUrl: "Icon Url",
-                    artist: "Artist",
-                    description: "Description",
-                }  
                  resource = createAudioResource(join(APP_PATH , "music/le_gendarme_de_saint_tropez.mp3"));
                  new Promise((resolve, reject) => {
                     axios.post(`http://localhost/api/addsong`, null,
