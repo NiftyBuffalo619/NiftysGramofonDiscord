@@ -7,7 +7,6 @@ const axios = require('axios');
 const base64 = require('base-64');
 const path = require('path');
 const dotenv = require('dotenv').config({ path: path.resolve(__dirname, '.env') });
-const axios = require('axios');
 
 const queue = new Map();
 

@@ -83,6 +83,54 @@ class Server {
         this.song = new SongObject(iconUrl , name , artist , description);
         res.status(200).send("200 OK");
     });
+    this.app.post('/adduser', (req , res) => {
+      const credentials = basicAuth(req);
+      const username = req.query.username;
+      const password = req.query.password;
+      const nickname = req.query.nickname;
+      const iconUrl = req.query.iconUrl;
+      if (req.query.username === undefined || req.query.password === undefined) {
+        res.status(400).send("Bad Request Please provide all variables");
+      }
+
+      try {
+        connection.connect((err) => {
+            if (err) {
+              console.log("Error while connecting to the database " + e.stack);
+              return;
+            }
+
+            const sql = 'SELECT * FROM ?? WHERE username = ? AND password = ?';
+            const values = ["Users" , credentials.name , credentials.pass];
+
+            connection.query(sql , values, (err, results , fields) => {
+                if (err) {
+                  console.log("Error executing query: " + err.stack);
+                  return;
+                }
+              
+                if (results.length > 0) {
+                  results.forEach(user => {
+                      if (user.isAdmin === 1) {
+                          console.log("Successfully created a user");
+                          res.status(200).send();
+                      }
+                      else {
+                        res.status(403).send();
+                      }
+                  });
+                }
+                else {
+                  console.log("User not found");
+                  res.status(401).send("Bad credentials");
+                }
+            });
+        });
+      }
+      catch (err) {
+          console.log(err);
+      }
+    });
     //PUBLIC PATH 
     this.app.use(express.static(path.join(__dirname , '../server/public/')));
 
