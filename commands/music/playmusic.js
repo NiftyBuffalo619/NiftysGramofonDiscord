@@ -6,6 +6,7 @@ const { join } = require('node:path');
 var colors = require('colors');
 const APP_PATH = require('../../static');
 const axios = require('axios');
+const { UpdatePlayingState } = require('../../helper/helper');
 
 const queue = new Map();
 
@@ -58,25 +59,8 @@ module.exports = {
         switch (interaction.options.get('music').value) {
             case "1":
                  resource = createAudioResource(join(APP_PATH , "music/le_gendarme_de_saint_tropez.mp3"));
-                 new Promise((resolve, reject) => {
-                    axios.post(`http://localhost/api/addsong`, null,
-                    {
-                        auth: {
-                            username: process.env.usernameDB,
-                            password: process.env.passwordDB,
-                        },
-                        params: {
-                            name: "Le gendarme de Saint Tropez",
-                            iconUrl: "https://image.pmgstatic.com/cache/resized/w663/files/images/film/photos/055/127/55127436_9aaf2e.jpg",
-                            artist: "Artist",
-                            description: "Description",
-                        }
-                    })
-                    .catch(error => {
-                        console.log(`Error ${error.stack}`);
-                        resolve();
-                     });
-                 });
+                 UpdatePlayingState("Le gendarme de Saint Tropez", "https://image.pmgstatic.com/cache/resized/w663/files/images/film/photos/055/127/55127436_9aaf2e.jpg",
+                 "Artist", "Description");
             break;
             default:
                 resource = createAudioResource(join(APP_PATH, "../music/le_gendarme_de_saint_tropez.mp3"));
