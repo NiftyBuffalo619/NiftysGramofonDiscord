@@ -110,8 +110,12 @@ class Server {
                 }
               
                 if (results.length > 0) {
-                  results.forEach(user => {
+                  results.forEach(async user => {
                       if (user.isAdmin === 1) {
+                          const [result] = await connection.query('INSERT INTO Users (username, password) VALUES (?, ?)', [req.query.username, req.query.password])
+                          .catch(err => {
+                            console.log(err.stack);
+                          });
                           console.log("Successfully created a user");
                           res.status(200).send();
                       }

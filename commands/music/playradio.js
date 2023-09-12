@@ -63,7 +63,6 @@ module.exports = {
         const username = process.env.usernameDB;
         const password = process.env.passwordDB;
         const AuthHeader = 'Basic ' + base64.encode(`${username}:${password}`);
-        console.log(`${username}:${password}`);
         switch (interaction.options.get('radio').value) {
             case "1":
                 new Promise((resolve, reject) => {

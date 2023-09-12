@@ -67,7 +67,7 @@ module.exports = {
                         },
                         params: {
                             name: "Le gendarme de Saint Tropez",
-                            iconUrl: "Icon Url",
+                            iconUrl: "https://image.pmgstatic.com/cache/resized/w663/files/images/film/photos/055/127/55127436_9aaf2e.jpg",
                             artist: "Artist",
                             description: "Description",
                         }
