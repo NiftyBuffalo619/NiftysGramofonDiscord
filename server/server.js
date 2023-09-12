@@ -47,11 +47,13 @@ class Server {
                 }
               
                 if (results.length > 0) {
-                  console.log("User found");
+                  results.forEach(user => {
+                    console.log(`[Server]: Successfully authenticated user ${user.username}`.cyan);
+                  });
                   next();
                 }
                 else {
-                  console.log("User not found");
+                  console.log(`[Server]: Unsuccessfull login bad credentials`.cyan);
                   res.status(401).send("Bad credentials");
                 }
             });
