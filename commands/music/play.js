@@ -1,12 +1,10 @@
 const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { joinVoiceChannel, getVoiceConnections , createAudioPlayer, NoSubscriberBehavior, createAudioResource , AudioPlayerStatus , StreamType} = require('@discordjs/voice');
-const { default: PlayDL } = require('play-dl');
 const { createReadStream } = require('node:fs');
-const { Player } = require('discord-player');
-const { SpotifyExtractor, SoundCloudExtractor } = require('@discord-player/extractor');
 const client = require('../../server');
 var colors = require('colors');
 const ytdl = require('ytdl-core');
+const play = require('play-dl');
 
 const queue = new Map();
 
@@ -41,13 +39,8 @@ module.exports = {
 			guildId: interaction.guildId,
 			adapterCreator: interaction.guild.voiceAdapterCreator,
 		});
-        var stream;
-        try {
-            stream = ytdl(query, { filter: 'audioonly'});
-        }
-        catch (err) {
-            interaction.reply("Error" + err.stack);
-        }
+        var yt_info = await play.search(query, { limit: 1});
+        var stream = await play.stream(yt_info[0].url);
         const player = createAudioPlayer({
             behaviors: {
                 noSubscriber: NoSubscriberBehavior.Play,
@@ -61,7 +54,7 @@ module.exports = {
         player.on('error', (err) => {
             console.log(`[Server][${hours}:${minutes}:${seconds}] An error occured: ${err}`.red);
         });
-        var resource = createAudioResource(ytdl(query, { filter: 'audioonly'}));
+        var resource = createAudioResource(stream.stream , { inputType: stream.type });
         connection.subscribe(player);
         player.play(resource);
     },
