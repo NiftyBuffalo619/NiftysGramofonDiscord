@@ -6,6 +6,7 @@ const { Player } = require('discord-player');
 const { SpotifyExtractor, SoundCloudExtractor } = require('@discord-player/extractor');
 const client = require('../../server');
 var colors = require('colors');
+const ytdl = require('ytdl-core');
 
 const queue = new Map();
 
@@ -28,24 +29,41 @@ module.exports = {
         ),
 
     async execute(interaction , client) {
+        const time = new Date();
+        var hours = time.getHours();
+        var minutes = time.getMinutes();
+        var seconds = time.getSeconds();
         const voicechannel = interaction.options.getChannel('channel');
-        const query = interaction.options.get('name').value;
-        /*const searchResult = PlayDL.search(query , { limit: 1});
-        const streamURL = searchResult[0].AudioPlayerStatus.Stream;*/
-        await interaction.deferReply();
+        const query = interaction.options.get('music').value;
+        console.log(`[Server][${hours}:${minutes}:${seconds}] Joining ${voicechannel.name}`.cyan);
+        const connection = joinVoiceChannel({
+			channelId: voicechannel.id,
+			guildId: interaction.guildId,
+			adapterCreator: interaction.guild.voiceAdapterCreator,
+		});
+        var stream;
         try {
-            const { track } = await player.play(channe , query , {
-                nodeOptions: {
-                    metadata: interaction
-                }
-            });
-            return interaction.followUp(`**${track.title}** enqueued!`);
+            stream = ytdl(query, { filter: 'audioonly'});
         }
         catch (err) {
-            console.log(`There was an error while trying to play`.red);
-            console.log(`Error Message: ${err.message}`);
+            interaction.reply("Error" + err.stack);
         }
-        await interaction.reply(`Searching for `);
+        const player = createAudioPlayer({
+            behaviors: {
+                noSubscriber: NoSubscriberBehavior.Play,
+            }
+        });
+        player.on(AudioPlayerStatus.Playing, () => {
+            interaction.reply(`Started playing`);
+            console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has started playing!`.cyan);
+        });
+
+        player.on('error', (err) => {
+            console.log(`[Server][${hours}:${minutes}:${seconds}] An error occured: ${err}`.red);
+        });
+        var resource = createAudioResource(ytdl(query, { filter: 'audioonly'}));
+        connection.subscribe(player);
+        player.play(resource);
     },
     
 }
