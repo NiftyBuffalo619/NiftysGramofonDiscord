@@ -5,6 +5,7 @@ const client = require('../../server');
 var colors = require('colors');
 const ytdl = require('ytdl-core');
 const play = require('play-dl');
+const helper = require('../../helper/helper');
 
 const queue = new Map();
 
@@ -41,6 +42,7 @@ module.exports = {
 		});
         var yt_info = await play.search(query, { limit: 1});
         var stream = await play.stream(yt_info[0].url);
+        helper.UpdatePlayingState(yt_info[0].title, yt_info[0].url, yt_info[0].channel, `Youtube video description: ${yt_info[0].description}`);
         const player = createAudioPlayer({
             behaviors: {
                 noSubscriber: NoSubscriberBehavior.Play,
@@ -48,9 +50,8 @@ module.exports = {
         });
         player.on(AudioPlayerStatus.Playing, () => {
             interaction.reply(`Started playing`);
-            console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has started playing!`.cyan);
+            console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has started playing from`.cyan + ` Youtube`.red + `!`.cyan);
         });
-
         player.on('error', (err) => {
             console.log(`[Server][${hours}:${minutes}:${seconds}] An error occured: ${err}`.red);
         });
