@@ -48,7 +48,7 @@ module.exports = {
                 noSubscriber: NoSubscriberBehavior.Play,
             }
         });
-        player.on(AudioPlayerStatus.Playing, () => {
+        await player.on(AudioPlayerStatus.Playing, () => {
             interaction.reply(`Started playing`);
             console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has started playing from`.cyan + ` Youtube`.red + `!`.cyan);
         });
