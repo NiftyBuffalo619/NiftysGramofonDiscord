@@ -35,6 +35,9 @@ class Server {
           res.status(503).send("Service temporarily unavailable");
         }
     }
+    this.app.get('/status', (req , res) => {
+        res.json({"status": "online", "servermode": this.status, "inChannel": ""});
+    });
 
     this.app.use(async(req , res , next) => {
       const credentials = basicAuth(req);
@@ -163,7 +166,7 @@ class Server {
     // ERROR HANDLING 
     this.app.use((err , req , res , next) => {
         if (req.accepts('json')) {
-          res.status(500);
+          res.status(500).send("Internal Server Error");
         }
         else if (req.accepts('html')) {
           res.status(500).send(`There was an error on the server ${err}`);
