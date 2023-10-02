@@ -12,6 +12,11 @@ const connection = mysql.createConnection({
   password: process.env.password,
   database: process.env.database
 });
+const ServerMode = {
+  OPERATIONAL: "operational", // Fully operational mode
+  LIMITED: "limited", // Some requests are temporarily restricted
+  MAINTENANCE: "maintenance", // All requests are temporarily restricted except for status request
+}
 
 class Server {
   constructor() {
@@ -21,6 +26,16 @@ class Server {
     this.paths = {
       //homepage: "/homepage",
     };
+    this.status = ServerMode.OPERATIONAL;
+    const ServerStatusMiddleware = (req , res , next) => {
+        if (this.status === ServerMode.OPERATIONAL) {
+          next();
+        }
+        else if (this.status === ServerMode.MAINTENANCE) {
+          res.status(503).send("Service temporarily unavailable");
+        }
+    }
+
     this.app.use(async(req , res , next) => {
       const credentials = basicAuth(req);
 
@@ -69,7 +84,7 @@ class Server {
     this.app.get('/api', (req , res) => {
         res.send("API");
     });
-    this.app.get('/api/song', (req , res) => {
+    this.app.get('/api/song', ServerStatusMiddleware, (req , res) => {
         res.json({ iconUrl: this.song.iconUrl, name: this.song.name , artist: this.song.artist , description: this.song.description });
     });
     this.app.post('/api/addsong', (req , res) => {
