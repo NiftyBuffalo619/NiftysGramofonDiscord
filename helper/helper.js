@@ -1,10 +1,12 @@
 const axios = require('axios');
 
-const UpdatePlayingState = (name , iconUrl , artist , description) => {
+const UpdatePlayingState = (name , iconUrl , artist , description, duration, liveAt) => {
     if (name === undefined || name === null &&
         iconUrl === undefined || iconUrl === null &&
         artist === undefined || artist === null &&
-        description === undefined || description === null) {
+        description === undefined || description === null &&
+        duration === undefined || duration === null &&
+        liveAt === undefined || liveAt === null) {
             throw new Error("Non of the following values cannot be null or undefined");
         }
 
@@ -20,6 +22,8 @@ const UpdatePlayingState = (name , iconUrl , artist , description) => {
                     iconUrl: `${iconUrl}`,
                     artist: `${artist}`,
                     description: `${description}`,
+                    duration: `${duration}`,
+                    liveAt: `${liveAt}`,
                 }
             })
             .catch(error => {

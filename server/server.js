@@ -22,7 +22,14 @@ class Server {
   constructor() {
     this.app = express();
     this.port = process.env.port || 80;
-    this.song = new SongObject();
+    this.song = new SongObject({
+      iconUrl: "null",
+      name: "null",
+      description: "Nothing is being played",
+      artist: "null",
+      duration: "null",
+      liveAt: "null",
+    });
     this.paths = {
       //homepage: "/homepage",
     };
@@ -88,10 +95,11 @@ class Server {
         res.send("API");
     });
     this.app.get('/api/song', ServerStatusMiddleware, (req , res) => {
-        res.json({ iconUrl: this.song.iconUrl, name: this.song.name , artist: this.song.artist , description: this.song.description });
+        res.json({ iconUrl: this.song.iconUrl, name: this.song.name , artist: this.song.artist , description: this.song.description , liveAt: this.song.liveAt });
     });
     this.app.post('/api/addsong', (req , res) => {
-        if (req.query.name === undefined || req.query.iconUrl === undefined || req.query.artist === undefined || req.query.description === undefined) {
+        if (req.query.name === undefined || req.query.iconUrl === undefined || req.query.artist === undefined || req.query.description === undefined 
+          || req.query.duration === undefined || req.query.liveAt === undefined) {
           res.status(400).send("Bad Request Please provide all variables");
           return;
         }
@@ -189,11 +197,13 @@ class Server {
   }
 }
 class SongObject {
-  constructor(iconUrl , name , artist , description) {
+  constructor(iconUrl , name , artist , description, duration, liveAt) {
       this.iconUrl = iconUrl;
       this.name = name;
       this.artist = artist;
       this.description = description;
+      this.duration = duration;
+      this.liveAt = liveAt;
   }
 }
 

@@ -42,7 +42,7 @@ module.exports = {
 		});
         var yt_info = await play.search(query, { limit: 1});
         var stream = await play.stream(yt_info[0].url);
-        helper.UpdatePlayingState(yt_info[0].title, yt_info[0].url, yt_info[0].channel, `Youtube video description: ${yt_info[0].description}`);
+        helper.UpdatePlayingState(yt_info[0].title, yt_info[0].url, yt_info[0].channel, `Youtube video description: ${yt_info[0].description}`, yt_info[0].durationInSec, 0);
         const player = createAudioPlayer({
             behaviors: {
                 noSubscriber: NoSubscriberBehavior.Play,
@@ -62,6 +62,7 @@ module.exports = {
             console.log(`[Server][${hours}:${minutes}:${seconds}] An error occured: ${err}`.red);
         });
         var resource = createAudioResource(stream.stream , { inputType: stream.type });
+        console.log(`${yt_info[0].durationRaw} AT NOW: `)
         connection.subscribe(player);
         player.play(resource);
     },
