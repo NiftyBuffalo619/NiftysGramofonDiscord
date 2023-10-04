@@ -58,6 +58,9 @@ module.exports = {
             console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has been stopped`.red);
             helper.UpdatePlayingState(``, ``, ``, `❌ Nothing is being played`);
         });
+        await player.on(AudioPlayerStatus.Paused, () => {
+            interaction.reply(`The audio has been paused`);
+        });
         player.on('error', (err) => {
             console.log(`[Server][${hours}:${minutes}:${seconds}] An error occured: ${err}`.red);
         });
