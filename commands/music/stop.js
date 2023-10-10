@@ -12,5 +12,10 @@ module.exports = {
         var hours = time.getHours();
         var minutes = time.getMinutes();
         var seconds = time.getSeconds();
+        const player = createAudioPlayer({behaviors: {
+                noSubscriber: NoSubscriberBehavior.Play,
+            }
+        }).stop();
+        interaction.reply("Stopped the audio");
     }
 }

@@ -50,11 +50,11 @@ module.exports = {
         });
         await player.on(AudioPlayerStatus.Playing, () => {
             interaction.reply(`Started playing **${yt_info[0].title}**`);
-            console.log(`[Server][${hours}:${minutes}:${seconds}] Playing`.cyan + ` ${yt_info[0].title}`.white.bold + ` Url: ${yt_info[0].url}`);
+            console.log(`[Server][${hours}:${minutes}:${seconds}] Playing`.cyan + ` ${yt_info[0].title}`.white + ` Url: ${yt_info[0].url}`);
             console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has started playing from`.cyan + ` Youtube`.red + `!`.cyan);
         });
         await player.on(AudioPlayerStatus.Idle, () => {
-            console.log(`[Server][${hours}:${minutes}:${seconds}] Stopping`.red + ` ${yt_info[0].title}`.white.bold  ` Url: ${yt_info[0].url}`.white);
+            console.log(`[Server][${hours}:${minutes}:${seconds}] Stopping`.red + ` ${yt_info[0].title}`.white + ` Url: ${yt_info[0].url}`.white);
             console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has been stopped`.red);
             helper.UpdatePlayingState(``, ``, ``, `❌ Nothing is being played`);
         });
@@ -65,7 +65,6 @@ module.exports = {
             console.log(`[Server][${hours}:${minutes}:${seconds}] An error occured: ${err}`.red);
         });
         var resource = createAudioResource(stream.stream , { inputType: stream.type });
-        console.log(`${yt_info[0].durationRaw} AT NOW: `)
         connection.subscribe(player);
         player.play(resource);
     },

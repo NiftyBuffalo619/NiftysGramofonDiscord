@@ -22,14 +22,7 @@ class Server {
   constructor() {
     this.app = express();
     this.port = process.env.port || 80;
-    this.song = new SongObject({
-      iconUrl: "null",
-      name: "null",
-      description: "Nothing is being played",
-      artist: "null",
-      duration: "null",
-      liveAt: "null",
-    });
+    this.song = new SongObject("","❌Nothing is being played","","null","null","null");
     this.paths = {
       //homepage: "/homepage",
     };
