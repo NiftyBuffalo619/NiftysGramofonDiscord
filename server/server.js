@@ -54,14 +54,14 @@ class Server {
               console.log("Error while connecting to the database " + e.stack);
               return;
             }
-            console.log("Successfully connected to the database");
+            //console.log("Successfully connected to the database");
 
             const sql = 'SELECT * FROM ?? WHERE username = ? AND password = ?';
             const values = ["Users" , credentials.name , credentials.pass];
 
             connection.query(sql , values, (err, results , fields) => {
                 if (err) {
-                  console.log("Error executing query: " + err.stack);
+                  console.log("[Server]: Error executing query: " + err.stack);
                   return;
                 }
               
