@@ -5,6 +5,7 @@ const basicAuth = require('basic-auth');
 const uri = process.env.db_uri;
 const bcrypt = require('bcrypt');
 const mysql = require('mysql2');
+const Player = require('../commands/music/play');
 
 const connection = mysql.createConnection({
   host: process.env.host,
@@ -104,6 +105,18 @@ class Server {
         this.song = new SongObject(iconUrl , name , artist , description);
         res.status(200).send("200 OK");
     });
+    this.app.post('/api/stopaudio', (req , res) => {
+        Player.getAudioPlayer().stop();
+        res.status(200).send("200 OK");
+    });
+    this.app.post('/api/pause', (req , res) => {
+        Player.getAudioPlayer().pause();
+        res.status(200).send("200 OK");
+    });
+    this.app.post('/api/unpause', (req , res) => {
+        Player.getAudioPlayer().unpause();
+        res.status(200).send("200 OK");
+    });
     this.app.post('/adduser', (req , res) => {
       const credentials = basicAuth(req);
       const username = req.query.username;
@@ -168,6 +181,7 @@ class Server {
     this.app.use((err , req , res , next) => {
         if (req.accepts('json')) {
           res.status(500).send("Internal Server Error");
+          console.log(err);
         }
         else if (req.accepts('html')) {
           res.status(500).send(`There was an error on the server ${err}`);
