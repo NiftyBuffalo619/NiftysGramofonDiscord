@@ -11,7 +11,33 @@ const queue = new Map();
 
 
 
+var AUDIOPLAYER;
+class PlayerAudio {
+    constructor(PlayerAudio) {
+        this.PlayerAudio = PlayerAudio;
+    }
+    
+    stop() {
+        if (this.PlayerAudio !== null) {
+            console.log("Error AudioPlayer cannot be null");
+        }
+        this.PlayerAudio.stop();
+    }
+    pause() {
+        if (this.PlayerAudio !== null) {
+            console.log("Error cannot be null");
+        }
+        this.PlayerAudio.pause();
+    }
+}
 module.exports = {
+    initializeAudioPlayer: (player) => {
+        AUDIOPLAYER = player;
+        return player;
+    },
+    getAudioPlayer: () => {
+        return AUDIOPLAYER;
+    },
     data: new SlashCommandBuilder()
     .setName('play')
     .setDescription('Plays music')
@@ -49,7 +75,7 @@ module.exports = {
             }
         });
         await player.on(AudioPlayerStatus.Playing, () => {
-            interaction.reply(`Started playing **${yt_info[0].title}**`);
+            //interaction.reply(`Started playing **${yt_info[0].title}**`);
             console.log(`[Server][${hours}:${minutes}:${seconds}] Playing`.cyan + ` ${yt_info[0].title}`.white + ` Url: ${yt_info[0].url}`);
             console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has started playing from`.cyan + ` Youtube`.red + `!`.cyan);
         });
@@ -67,6 +93,8 @@ module.exports = {
         var resource = createAudioResource(stream.stream , { inputType: stream.type });
         connection.subscribe(player);
         player.play(resource);
+        module.exports.initializeAudioPlayer(player);
+        await interaction.reply(`Started playing **${yt_info[0].title}**`)
     },
-    
+
 }

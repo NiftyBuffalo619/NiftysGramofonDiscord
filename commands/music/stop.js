@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChannelType } = require('discord.js');
 const { joinVoiceChannel, getVoiceConnections , createAudioPlayer, NoSubscriberBehavior, createAudioResource , AudioPlayerStatus , StreamType} = require('@discordjs/voice');
 const { createReadStream } = require('node:fs');
+var Player = require('./play');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,10 +13,8 @@ module.exports = {
         var hours = time.getHours();
         var minutes = time.getMinutes();
         var seconds = time.getSeconds();
-        const player = createAudioPlayer({behaviors: {
-                noSubscriber: NoSubscriberBehavior.Play,
-            }
-        }).stop();
-        interaction.reply("Stopped the audio");
+        //AudioPlayerClass.stop();
+        Player.getAudioPlayer().stop();
+        await interaction.reply("Stopped the audio");
     }
 }
