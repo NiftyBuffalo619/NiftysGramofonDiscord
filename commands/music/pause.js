@@ -11,7 +11,10 @@ module.exports = {
         var hours = time.getHours();
         var minutes = time.getMinutes();
         var seconds = time.getSeconds();
-
+        if (Player.getAudioPlayer() === undefined) {
+            await interaction.reply("There is nothing playing");
+            return;
+        }
         Player.getAudioPlayer().pause();
         await interaction.reply("Paused the audio");
     }
