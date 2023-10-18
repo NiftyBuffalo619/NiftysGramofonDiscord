@@ -66,6 +66,7 @@ module.exports = {
 			guildId: interaction.guildId,
 			adapterCreator: interaction.guild.voiceAdapterCreator,
 		});
+        await interaction.deferReply();
         var yt_info = await play.search(query, { limit: 1});
         var stream = await play.stream(yt_info[0].url);
         helper.UpdatePlayingState(yt_info[0].title, yt_info[0].url, yt_info[0].channel, `Youtube video description: ${yt_info[0].description}`, yt_info[0].durationInSec, 0);
@@ -75,7 +76,6 @@ module.exports = {
             }
         });
         await player.on(AudioPlayerStatus.Playing, () => {
-            //interaction.reply(`Started playing **${yt_info[0].title}**`);
             console.log(`[Server][${hours}:${minutes}:${seconds}] Playing`.cyan + ` ${yt_info[0].title}`.white + ` Url: ${yt_info[0].url}`);
             console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has started playing from`.cyan + ` Youtube`.red + `!`.cyan);
         });
@@ -94,7 +94,7 @@ module.exports = {
         connection.subscribe(player);
         player.play(resource);
         module.exports.initializeAudioPlayer(player);
-        await interaction.reply(`Started playing **${yt_info[0].title}**`)
+        await interaction.editReply(`Started playing **${yt_info[0].title}**`);
     },
 
 }
