@@ -11,7 +11,10 @@ const { joinVoiceChannel, getVoiceConnections , createAudioPlayer, NoSubscriberB
 const { time } = require('node:console');
 const config = require("./config/config");
 
-config.LoadConfig();
+var PORT = 80; // By default
+var configuration = config.LoadConfig().then((configfile) => {
+    PORT = configfile.app.port;
+});
 //const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const client = new Client({ intents: [
 	IntentsBitField.Flags.Guilds,
