@@ -7,6 +7,7 @@ const axios = require('axios');
 const base64 = require('base-64');
 const path = require('path');
 const dotenv = require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+const notify = require("../../notifications/notify");
 
 const queue = new Map();
 
@@ -85,6 +86,7 @@ module.exports = {
                      });
                  });
                  resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
+                notify.notifyRadioPlayback({title: "Impuls"});
             break;
             case "2":
                 new Promise((resolve, reject) => {
@@ -95,7 +97,7 @@ module.exports = {
                             password: process.env.passwordDB,
                         },
                         params: {
-                            name: "Radio Blanik",
+                            name: "Blanik",
                             iconUrl: "",
                             artist: "",
                             description: "",
@@ -107,6 +109,7 @@ module.exports = {
                      });
                  });
                 resource = createAudioResource('http://ice.abradio.cz/blanikfm128.mp3');
+                notify.notifyRadioPlayback({title: "Blaník"});
             break;
             case "3":
                 new Promise((resolve, reject) => {
@@ -129,6 +132,7 @@ module.exports = {
                      });
                  });
                 resource = createAudioResource('https://ice.actve.net/fm-evropa2-128');
+                notify.notifyRadioPlayback({title: "Evropa 2"});
             break;
             case "4":
                 new Promise((resolve, reject) => {
@@ -151,6 +155,7 @@ module.exports = {
                      });
                  });
                 resource = createAudioResource('http://orf-live.ors-shoutcast.at/oe3-q2a');
+                notify.notifyRadioPlayback({title: "OE 3"});
             break;
             default:
                 new Promise((resolve, reject) => {
@@ -173,6 +178,7 @@ module.exports = {
                      });
                  });
                 resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
+                notify.notifyRadioPlayback({title: "Impuls"});
             break;
         }
         player.play(resource);

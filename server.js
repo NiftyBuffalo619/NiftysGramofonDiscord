@@ -64,6 +64,8 @@ client.once(Events.ClientReady, c => {
 		name: `Nifty's Discord`,
 		type: ActivityType.Watching,
 	});
+	const notify = require("./notifications/notify");
+	notify.notifyStartup();
 
 	setInterval(() => {
 		let random = Math.floor(Math.random() * status.length);

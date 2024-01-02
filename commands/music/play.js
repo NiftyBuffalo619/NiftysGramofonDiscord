@@ -6,6 +6,7 @@ var colors = require('colors');
 const ytdl = require('ytdl-core');
 const play = require('play-dl');
 const helper = require('../../helper/helper');
+const notify = require("../../notifications/notify");
 
 const queue = new Map();
 
@@ -80,9 +81,10 @@ module.exports = {
             console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has started playing from`.cyan + ` Youtube`.red + `!`.cyan);
         });
         await player.on(AudioPlayerStatus.Idle, () => {
-            console.log(`[Server][${hours}:${minutes}:${seconds}] Stopping`.red + ` ${yt_info[0].title}`.white + ` Url: ${yt_info[0].url}`.white);
-            console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has been stopped`.red);
-            helper.UpdatePlayingState(``, ``, ``, `❌ Nothing is being played`);
+                console.log(`[Server][${hours}:${minutes}:${seconds}] Stopping`.red + ` ${yt_info[0].title}`.white + ` Url: ${yt_info[0].url}`.white);
+                console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has been stopped`.red);
+                helper.UpdatePlayingState(``, ``, ``, `❌ Nothing is being played`);
+                notify.notifyPlaybackYTStop({title: yt_info[0].title});
         });
         await player.on(AudioPlayerStatus.Paused, () => {
             console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has been paused`.red);
@@ -95,6 +97,7 @@ module.exports = {
         player.play(resource);
         module.exports.initializeAudioPlayer(player);
         await interaction.editReply(`Started playing **${yt_info[0].title}**`);
+        await notify.notifyPlaybackYT({title: yt_info[0].title, description: yt_info[0].description, channel: voicechannel.name});
     },
 
 }
