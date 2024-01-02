@@ -9,8 +9,9 @@ const { createSpinner } = require('nanospinner');
 var colors = require('colors');
 const { joinVoiceChannel, getVoiceConnections , createAudioPlayer, NoSubscriberBehavior, createAudioResource , AudioPlayerStatus , StreamType} = require('@discordjs/voice');
 const { time } = require('node:console');
+const config = require("./config/config");
 
-
+config.LoadConfig();
 //const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const client = new Client({ intents: [
 	IntentsBitField.Flags.Guilds,

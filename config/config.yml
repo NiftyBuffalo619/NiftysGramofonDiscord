@@ -1,0 +1,6 @@
+app:
+  port: 80
+ntfy: 
+  allowed: true
+  url: 
+  topic: niftyhogramofon
