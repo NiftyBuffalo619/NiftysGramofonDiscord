@@ -7,12 +7,20 @@ const bcrypt = require('bcrypt');
 const mysql = require('mysql2');
 const Player = require('../commands/music/play');
 
-const connection = mysql.createConnection({
-  host: process.env.host,
-  user: "gramofon",
-  password: process.env.password,
-  database: process.env.database
-});
+var connection;
+const config = require("../config/config");
+const Configuration = new config();
+
+Configuration.load();
+
+if (Configuration.get("app.webserver")) {
+  connection = mysql.createConnection({
+    host: process.env.host,
+    user: "gramofon",
+    password: process.env.password,
+    database: process.env.database
+  });
+}
 const ServerMode = {
   OPERATIONAL: "operational", // Fully operational mode
   LIMITED: "limited", // Some requests are temporarily restricted

@@ -1,6 +1,12 @@
 const axios = require('axios');
+const config = require("../config/config");
+const Configuration = new config();
+Configuration.load();
 
 const UpdatePlayingState = (name , iconUrl , artist , description, duration, liveAt) => {
+    if (!Configuration.get("app.webserver")) {
+        return;
+    }
     if (name === undefined || name === null &&
         iconUrl === undefined || iconUrl === null &&
         artist === undefined || artist === null &&

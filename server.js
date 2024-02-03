@@ -11,10 +11,10 @@ const { joinVoiceChannel, getVoiceConnections , createAudioPlayer, NoSubscriberB
 const { time } = require('node:console');
 const config = require("./config/config");
 
-var PORT = 80; // By default
-var configuration = config.LoadConfig().then((configfile) => {
-    PORT = configfile.app.port;
-});
+const Configuration = new config();
+Configuration.load();
+var PORT = Configuration.get("app.port") || 80; // By default
+
 //const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const client = new Client({ intents: [
 	IntentsBitField.Flags.Guilds,
@@ -174,6 +174,14 @@ client.on(Events.InteractionCreate, async interaction => {
 
 const Server = require('./server/server');
 const server = new Server();
-server.listen(80);
+const WebServerAllowed = Configuration.get("app.webserver");
+if (WebServerAllowed == true) {
+	server.listen(PORT);
+	console.log(`[CONFIG] Web Server is `.white + `enabled`.green + ``.white);
+}
+else {
+	console.log("CONFIG " + config.config);
+	console.log(`[CONFIG] Web Server is`.white + ` disabled`.red + ``.white);
+}
 client.login(token);
 //module.exports = client;

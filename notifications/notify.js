@@ -1,20 +1,16 @@
 const axios = require("axios");
 var colors = require('colors');
 const config = require("../config/config");
-var ntfy_allowed = "";
-var server_address = "";
-var topic = "";
-var configuration = config.LoadConfig().then((configfile) => {
-    ntfy_allowed = configfile.ntfy.allowed;
-    server_address = configfile.ntfy.url;
-    topic = configfile.ntfy.topic;
-});
+
+
+const Configuration = new config();
+Configuration.load();
 const notifyCustom = () => {
 
 }
 
 const isNtfyAllowed = () => {
-    if (ntfy_allowed) {
+    if (Configuration.get("ntfy.allowed")) {
         return true;
     }
 }
@@ -26,7 +22,7 @@ const notifyStartup = async () => {
         const headers = {
             "Title": `=?UTF-8?B?${encodedTitle}?=`,
             "Priority": "3",
-            "icon": "",
+            "icon": configuration.icon,
             "tags": ["tada"],
             "markdown": true,
         };
@@ -43,7 +39,7 @@ const notifyPlaybackYT = async ({title: title, description: description, channel
         const headers = {
             "Title": `=?UTF-8?B?${encodedTitle}?=`,
             "Priority": "3",
-            "icon": "",
+            "icon": configuration.icon,
             "tags": ["tada"],
             "markdown": true,
         };
@@ -60,7 +56,7 @@ const notifyPlaybackYTStop = async ({title: title}) => {
         const headers = {
             "Title": `=?UTF-8?B?${encodedTitle}?=`,
             "Priority": "3",
-            "icon": "",
+            "icon": configuration.icon,
             "tags": ["tada"],
             "markdown": true,
         };
@@ -78,11 +74,16 @@ const notifyRadioPlayback = async ({title: title}) => {
         const headers = {
             "Title": `=?UTF-8?B?${encodedTitle}?=`,
             "Priority": "3",
-            "icon": "",
+            "icon": configuration.icon,
             "tags": ["radio", "control_knobs"],
             "markdown": true,
         };
-        axios.post(`${server_address}/niftyhogramofon`, `Spuštěno radio **${title}** `, { headers });
+        axios.post(`${server_address}/niftyhogramofon`, `Spuštěno radio **${title}** `, { headers }).then(res => {
+            console.log(`[SERVER-NOTIFICATIONS]: Successfully sent startup notification`);
+        }).catch((err) => {
+            reject(err);
+            console.log(`[SERVER-NOTIFICATIONS]: There was an error while sending notification ${err.message}`.red);
+        });
     }
     catch (err) {
         console.log(`[SERVER-NOTIFICATIONS]: There was an error while sending notification ${err.message}`.red);
