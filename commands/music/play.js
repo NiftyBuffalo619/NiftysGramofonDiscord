@@ -61,6 +61,8 @@ module.exports = {
         var seconds = time.getSeconds();
         const voicechannel = interaction.options.getChannel('channel');
         const query = interaction.options.get('music').value;
+        
+        console.log(`[Server][${hours}:${minutes}:${seconds}] User ${interaction.user.username} with avatar ${interaction.user.avatarURL().toString()} used command play with values: ${query}`);
         console.log(`[Server][${hours}:${minutes}:${seconds}] Joining ${voicechannel.name}`.cyan);
         const connection = joinVoiceChannel({
 			channelId: voicechannel.id,

@@ -1,4 +1,4 @@
-const { Client, Events, Collection , GatewayIntentBits, IntentsBitField , REST , Routes , ActivityType} = require('discord.js');
+const { Client, Events, Collection , GatewayIntentBits, IntentsBitField , REST , Routes , ActivityType, PermissionFlagsBits} = require('discord.js');
 const dotenv = require('dotenv').config();
 const token = process.env.token;
 const fs = require('node:fs');
@@ -23,6 +23,10 @@ const client = new Client({ intents: [
 	IntentsBitField.Flags.MessageContent,
 	IntentsBitField.Flags.GuildVoiceStates,
 	IntentsBitField.Flags.GuildEmojisAndStickers,
+	IntentsBitField.Flags.GuildIntegrations,
+	IntentsBitField.Flags.GuildPresences,
+	IntentsBitField.Flags.DirectMessages,
+	IntentsBitField.Flags.MessageContent,
 ] });
 
 client.commands = new Collection();
