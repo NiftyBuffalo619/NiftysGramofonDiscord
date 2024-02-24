@@ -37,8 +37,27 @@ const LogMusicCommandUsage = async (username, iconUrl, CommandValue, Url, Channe
     //console.log(getRows.data);
 }
 
-const FullCommandLog = async (Date, username, iconUrl, CommandValue, Url, ChannelName) => {
+const FullCommandLog = async (Date, username, iconUrl, Command) => {
+    const auth = new google.auth.GoogleAuth({
+        keyFile: "credentials.json",
+        scopes: "https://www.googleapis.com/auth/spreadsheets"
+    });
 
+    const client = await auth.getClient();
+
+    const googleSheets = google.sheets({ version: "v4", auth: client });
+
+    await googleSheets.spreadsheets.values.append({
+        auth: auth,
+        spreadsheetId: process.env.spreadSheetId,
+        range: "FullCommandLogs!A:D",
+        valueInputOption: "USER_ENTERED",
+        resource: {
+            values: [
+                [Date, username, iconUrl, Command]
+            ]
+        }
+    });
 }
 
-module.exports = { LogMusicCommandUsage };
+module.exports = { LogMusicCommandUsage , FullCommandLog };

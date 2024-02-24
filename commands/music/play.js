@@ -80,6 +80,8 @@ module.exports = {
             }
         });
         logs.LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), query, yt_info[0].url, voicechannel.name);
+        logs.FullCommandLog(`${time.getDate()}.${time.getMonth() + 1}.${time.getFullYear()} ${hours}:${minutes}:${seconds}`
+        , interaction.user.username, interaction.user.avatarURL().toString(), "/play");
         await player.on(AudioPlayerStatus.Playing, () => {
             console.log(`[Server][${hours}:${minutes}:${seconds}] Playing`.cyan + ` ${yt_info[0].title}`.white + ` Url: ${yt_info[0].url}`);
             console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has started playing from`.cyan + ` Youtube`.red + `!`.cyan);
