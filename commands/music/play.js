@@ -7,6 +7,7 @@ const ytdl = require('ytdl-core');
 const play = require('play-dl');
 const helper = require('../../helper/helper');
 const notify = require("../../notifications/notify");
+const logs = require("../../logs/logs");
 
 const queue = new Map();
 
@@ -78,6 +79,7 @@ module.exports = {
                 noSubscriber: NoSubscriberBehavior.Play,
             }
         });
+        logs.LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), query, yt_info[0].url, voicechannel.name);
         await player.on(AudioPlayerStatus.Playing, () => {
             console.log(`[Server][${hours}:${minutes}:${seconds}] Playing`.cyan + ` ${yt_info[0].title}`.white + ` Url: ${yt_info[0].url}`);
             console.log(`[Server][${hours}:${minutes}:${seconds}] AudioPlayer has started playing from`.cyan + ` Youtube`.red + `!`.cyan);

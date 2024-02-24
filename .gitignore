@@ -9,3 +9,4 @@ notes.txt
 ./node_modules
 node_modules
 Dockerfile
+credentials.json

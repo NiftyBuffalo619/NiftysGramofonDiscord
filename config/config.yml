@@ -6,3 +6,5 @@ ntfy:
   url: 
   topic: niftyhogramofon
   icon: 
+googlesheets: # Allows you to store data in a googlesheets file
+  allowed: true
