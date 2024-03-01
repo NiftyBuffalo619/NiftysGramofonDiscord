@@ -8,6 +8,7 @@ const base64 = require('base-64');
 const path = require('path');
 const dotenv = require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 const notify = require("../../notifications/notify");
+const { LogMusicCommandUsage, FullCommandLog } = require('../../logs/logs');
 
 const queue = new Map();
 
@@ -87,6 +88,7 @@ module.exports = {
                  });
                  resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
                 notify.notifyRadioPlayback({title: "Impuls"});
+                LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), "Radio Impuls", "https://icecast5.play.cz/impuls128.mp3?1571059741", voicechannel.name);
             break;
             case "2":
                 new Promise((resolve, reject) => {
@@ -110,6 +112,7 @@ module.exports = {
                  });
                 resource = createAudioResource('http://ice.abradio.cz/blanikfm128.mp3');
                 notify.notifyRadioPlayback({title: "Blaník"});
+                LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), "Radio Blaník", "https://icecast5.play.cz/impuls128.mp3?1571059741", voicechannel.name);
             break;
             case "3":
                 new Promise((resolve, reject) => {
@@ -133,6 +136,7 @@ module.exports = {
                  });
                 resource = createAudioResource('https://ice.actve.net/fm-evropa2-128');
                 notify.notifyRadioPlayback({title: "Evropa 2"});
+                LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), "Radio Evropa 2", "https://ice.actve.net/fm-evropa2-128", voicechannel.name);
             break;
             case "4":
                 new Promise((resolve, reject) => {
@@ -156,6 +160,9 @@ module.exports = {
                  });
                 resource = createAudioResource('http://orf-live.ors-shoutcast.at/oe3-q2a');
                 notify.notifyRadioPlayback({title: "OE 3"});
+                LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), "Radio OE 3", "http://orf-live.ors-shoutcast.at/oe3-q2a", voicechannel.name);
+                FullCommandLog(`${time.getDate()}.${time.getMonth() + 1}.${time.getFullYear()} ${hours}:${minutes}:${seconds}`
+                , interaction.user.username, interaction.user.avatarURL().toString(), "/playradio");
             break;
             default:
                 new Promise((resolve, reject) => {
@@ -179,6 +186,7 @@ module.exports = {
                  });
                 resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
                 notify.notifyRadioPlayback({title: "Impuls"});
+                LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), "Radio Impuls", "https://icecast5.play.cz/impuls128.mp3?1571059741", voicechannel.name);
             break;
         }
         player.play(resource);
