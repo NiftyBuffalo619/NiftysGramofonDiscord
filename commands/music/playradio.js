@@ -51,7 +51,7 @@ module.exports = {
                 noSubscriber: NoSubscriberBehavior.Play,
             }
         });
-
+        await interaction.deferReply();
         player.on(AudioPlayerStatus.Playing, () => {
             console.log(`[Server][${hours}:${minutes}:${seconds}] Radio has started playing!`.cyan);
         });
@@ -95,6 +95,6 @@ module.exports = {
             break;
         }
         player.play(resource);
-        await interaction.reply(`Playing radio 📡...`);
+        await interaction.editReply(`Playing radio 📡...`);
     },
 }
