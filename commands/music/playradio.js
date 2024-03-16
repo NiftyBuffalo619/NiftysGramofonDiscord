@@ -67,97 +67,21 @@ module.exports = {
         const AuthHeader = 'Basic ' + base64.encode(`${username}:${password}`);
         switch (interaction.options.get('radio').value) {
             case "1":
-                new Promise((resolve, reject) => {
-                    axios.post(`http://localhost/api/addsong`, null,
-                    {
-                        auth: {
-                            username: process.env.usernameDB,
-                            password: process.env.passwordDB,
-                        },
-                        params: {
-                            name: "Radio Impuls",
-                            iconUrl: "https://api.play.cz/static/radio_logo/t200/impuls.png",
-                            artist: "",
-                            description: "",
-                        }
-                    })
-                    .catch(error => {
-                        console.log(`Error ${error.stack}`);
-                        resolve();
-                     });
-                 });
-                 resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
+                resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
                 notify.notifyRadioPlayback({title: "Impuls"});
                 LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), "Radio Impuls", "https://icecast5.play.cz/impuls128.mp3?1571059741", voicechannel.name);
             break;
             case "2":
-                new Promise((resolve, reject) => {
-                    axios.post(`http://localhost/api/addsong`, null,
-                    {
-                        auth: {
-                            username: process.env.usernameDB,
-                            password: process.env.passwordDB,
-                        },
-                        params: {
-                            name: "Blanik",
-                            iconUrl: "",
-                            artist: "",
-                            description: "",
-                        }
-                    })
-                    .catch(error => {
-                        console.log(`Error ${error.stack}`);
-                        resolve();
-                     });
-                 });
                 resource = createAudioResource('http://ice.abradio.cz/blanikfm128.mp3');
                 notify.notifyRadioPlayback({title: "Blaník"});
                 LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), "Radio Blaník", "https://icecast5.play.cz/impuls128.mp3?1571059741", voicechannel.name);
             break;
             case "3":
-                new Promise((resolve, reject) => {
-                    axios.post(`http://localhost/api/addsong`, null,
-                    {
-                        auth: {
-                            username: process.env.usernameDB,
-                            password: process.env.passwordDB,
-                        },
-                        params: {
-                            name: "Evropa 2",
-                            iconUrl: "",
-                            artist: "",
-                            description: "",
-                        }
-                    })
-                    .catch(error => {
-                        console.log(`Error ${error.stack}`);
-                        resolve();
-                     });
-                 });
                 resource = createAudioResource('https://ice.actve.net/fm-evropa2-128');
                 notify.notifyRadioPlayback({title: "Evropa 2"});
                 LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), "Radio Evropa 2", "https://ice.actve.net/fm-evropa2-128", voicechannel.name);
             break;
             case "4":
-                new Promise((resolve, reject) => {
-                    axios.post(`http://localhost/api/addsong`, null,
-                    {
-                        auth: {
-                            username: process.env.usernameDB,
-                            password: process.env.passwordDB,
-                        },
-                        params: {
-                            name: "OE 3",
-                            iconUrl: "",
-                            artist: "",
-                            description: "",
-                        }
-                    })
-                    .catch(error => {
-                        console.log(`Error ${error.stack}`);
-                        resolve();
-                     });
-                 });
                 resource = createAudioResource('http://orf-live.ors-shoutcast.at/oe3-q2a');
                 notify.notifyRadioPlayback({title: "OE 3"});
                 LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), "Radio OE 3", "http://orf-live.ors-shoutcast.at/oe3-q2a", voicechannel.name);
@@ -165,25 +89,6 @@ module.exports = {
                 , interaction.user.username, interaction.user.avatarURL().toString(), "/playradio");
             break;
             default:
-                new Promise((resolve, reject) => {
-                    axios.post(`http://localhost/api/addsong`, null,
-                    {
-                        auth: {
-                            username: process.env.usernameDB,
-                            password: process.env.passwordDB,
-                        },
-                        params: {
-                            name: "Radio",
-                            iconUrl: "",
-                            artist: "",
-                            description: "",
-                        }
-                    })
-                    .catch(error => {
-                        console.log(`Error ${error.stack}`);
-                        resolve();
-                     });
-                 });
                 resource = createAudioResource('https://icecast5.play.cz/impuls128.mp3?1571059741');
                 notify.notifyRadioPlayback({title: "Impuls"});
                 LogMusicCommandUsage(interaction.user.username, interaction.user.avatarURL().toString(), "Radio Impuls", "https://icecast5.play.cz/impuls128.mp3?1571059741", voicechannel.name);
